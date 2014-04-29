@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG -D_DEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 
-add_definitions("-Wall -pedantic -I/usr/local/include")
+add_definitions("-Wall -I/usr/local/include")
 
 string(COMPARE EQUAL "${CMAKE_BUILD_TYPE}" "" EMPTY_BUILD_TYPE)
 if(EMPTY_BUILD_TYPE)
