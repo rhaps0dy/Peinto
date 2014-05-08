@@ -3,7 +3,5 @@
 "framework.h"
 */
 
-void drawLine(Image *img, Pos p1, Pos p2, Color c);
-void drawCircle(Image *img, Pos p, Uint r, Color c);
-
-#endif //_bresenham_h_
+void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color *c);
+void drawCircle(Image *img, Pos2 p, Uint r, const Color *c);

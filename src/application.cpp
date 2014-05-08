@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "image.h"
 #include "readme.h"
+#include "bresenham.h"
 
 Application::Application(const char* caption, int width, int height)
 {
@@ -35,6 +36,19 @@ void Application::render(void)
 {
 	// Clear the window and the depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	drawLine(img, Pos2(50, 0), Pos2(50, 100), &Color::RED);
+	drawLine(img, Pos2(200, 50), Pos2(100, 50), &Color::RED);
+	drawLine(img, Pos2(0, 150), Pos2(100, 150), &Color::RED);
+	drawLine(img, Pos2(150, 200), Pos2(150, 100), &Color::RED);
+	drawLine(img, Pos2(0, 200), Pos2(100, 300), &Color::RED);
+	drawLine(img, Pos2(200, 300), Pos2(100, 200), &Color::RED);
+	drawLine(img, Pos2(0, 400), Pos2(100, 300), &Color::RED);
+	drawLine(img, Pos2(200, 300), Pos2(100, 400), &Color::RED);
+	drawLine(img, Pos2(300, 100), Pos2(400, 150), &Color::RED);
+	drawLine(img, Pos2(400, 150), Pos2(500, 100), &Color::RED);
+	drawLine(img, Pos2(500, 100), Pos2(400, 50), &Color::RED);
+	drawLine(img, Pos2(400, 50), Pos2(300, 100), &Color::RED);
 
 	renderImage(img);
 
