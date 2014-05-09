@@ -1,11 +1,10 @@
 /*  by Javi Agenjo 2013 UPF  javi.agenjo@gmail.com
 	This contains several functions that can be useful when programming your game.
 */
-#ifndef UTILS_H
-#define UTILS_H
-
-#include "includes.h"
-#include "framework.h"
+/*requires
+"includes.h"
+"framework.h"
+*/
 
 //General functions **************
 class Application;
@@ -20,4 +19,3 @@ void launchLoop(Application* app);
 void renderImage(Image* img);
 
 inline Float _random() { return (rand() % 10000) / 10000.0; }
-#endif

@@ -1,10 +1,10 @@
-#include "application.h"
-#include <cstdio>
-#include <cstring>
-#include "utils.h"
+#include "platform.h"
+#include "framework.h"
 #include "image.h"
-#include "readme.h"
-#include "bresenham.h"
+#include "gui.h"
+#include "utils.h"
+#include "draw.h"
+#include "application.h"
 
 Application::Application(const char* caption, int width, int height)
 {
@@ -22,6 +22,7 @@ Application::Application(const char* caption, int width, int height)
 
 	gs.lastMDown = mouse_position;
 	gs.tool = FREEHAND;
+	gs.dwg = 0;
 }
 
 //Here we have already GL working, so we can create meshes and textures
@@ -48,7 +49,7 @@ void Application::render(void)
 
 	img->fill(Color::BLACK);
 	memcpy(img->pixels, canvas->pixels, window_width*window_height*sizeof(Color));
-	if(gs.tool == LINE_D || gs.tool == POLYGON_D)
+	if(gs.dwg && (gs.tool == LINE || gs.tool == POLYGON))
 		drawLine(img, gs.lastMDown, mouse_position, Color::RED);
 	renderImage(img);
 
@@ -70,30 +71,32 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 		case SDLK_c: gs.tool = CIRCLE; break;
 		case SDLK_l: gs.tool = LINE; break;
 		case SDLK_p: gs.tool = POLYGON; break;
-		case SDLK_ESCAPE:
-			if(gs.tool == POLYGON_D) gs.tool = POLYGON;
-			if(gs.tool == LINE_D) gs.tool = LINE;
+		case SDLK_ESCAPE: if(gs.dwg) gs.dwg = 0; break;
 	}
 }
 
 //mouse button event
 void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
-	if(gs.tool == FREEHAND) gs.tool = FREEHAND_D;
-	else if(gs.tool == CIRCLE) gs.tool = CIRCLE_D;
-	else if(gs.tool == LINE) gs.tool = LINE_D;
-	else if(gs.tool == POLYGON) gs.tool = POLYGON_D;
-	else if(gs.tool == LINE_D || gs.tool == POLYGON_D) {
-		drawLine(canvas, gs.lastMDown, mouse_position, Color::WHITE);
-		if(gs.tool == LINE_D)
-			gs.tool = LINE;
+	if(!gs.dwg) {
+		gs.dwg = -1;
+	}
+	else {
+		switch(gs.tool) {
+			case LINE:
+				gs.dwg = 0;
+			case POLYGON:
+				drawLine(canvas, gs.lastMDown, mouse_position, Color::WHITE);
+				break;
+			default: break;
+		}
 	}
 	gs.lastMDown = mouse_position;
 }
 
 void Application::onMouseButtonUp( SDL_MouseButtonEvent event )
 {
-	if(gs.tool == FREEHAND_D) gs.tool = FREEHAND;
+	if(gs.tool == FREEHAND && gs.dwg) gs.dwg = 0;
 }
 
 //when the app starts

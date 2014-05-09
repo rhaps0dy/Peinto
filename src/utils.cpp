@@ -1,14 +1,15 @@
+#include "platform.h"
+#include "framework.h"
 #include "utils.h"
-
+#include "gui.h"
+#include "image.h"
+#include "application.h"
 #ifdef WIN32
 	#include <windows.h>
 #else
 	#include <sys/time.h>
 #endif
-
-#include "includes.h"
-#include "application.h"
-#include "image.h"
+#include <iostream>
 
 //this function is used to access OpenGL Extensions (special features not supported by all cards)
 void* getGLProcAddress(const char* name)
@@ -33,8 +34,6 @@ bool checkGLErrors()
 //create a window using SDL
 SDL_Window* createWindow(const char* caption, int width, int height )
 {
-	int bpp = 0;
-
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	//set attributes

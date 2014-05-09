@@ -1,22 +1,15 @@
 /*  by Javi Agenjo 2013 UPF  javi.agenjo@gmail.com
 	Here we define all the mathematical classes like Vector3, Matrix44 and some extra useful geometrical functions
 */
+/*requires
+<math.h>
+*/
 
-#ifndef FRAMEWORK //macros to ensure the code is included once
-#define FRAMEWORK
-
-#include <vector>
-#include <cmath>
-#include <cstdlib>
-#include <stdint.h>
-
-#ifdef WIN32
-	#define M_PI_2 (PI/2.)
-#endif
-
-#ifndef PI
+#undef PI
 #define PI 3.14159265359
-#endif
+#undef M_PI_2
+#define M_PI_2 (PI/2.)
+#undef DEG2RAD
 #define DEG2RAD 0.0174532925
 
 #ifdef DOUBLE_PRECISION
@@ -258,5 +251,3 @@ public:
 	Pos2(Uint _x, Uint _y) { x=_x; y=_y; }
 	inline void set(Uint _x, Uint _y) { x=_x; y=_y; }
 };
-
-#endif

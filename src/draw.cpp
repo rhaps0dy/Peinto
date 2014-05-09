@@ -1,6 +1,7 @@
-#include "image.h"
+#include "platform.h"
 #include "framework.h"
-#include "bresenham.h"
+#include "image.h"
+#include "draw.h"
 
 #define PAINTPIXEL(P) img->setPixel(P.x, P.y, c);
 

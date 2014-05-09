@@ -1,3 +1,7 @@
+#include <math.h>
+#include "platform.h"
+#include "framework.h"
+#include <iostream>
 #include "image.h"
 
 Image::Image() {

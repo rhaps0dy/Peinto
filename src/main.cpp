@@ -7,13 +7,16 @@
 	 + It takes all the events from SDL and redirect them to the game
 */
 
-#include "includes.h"
+#include "platform.h"
+#include "framework.h"
+#include "image.h"
+#include "gui.h"
 #include "application.h"
 
 int main(int argc, char **argv)
 {
 	//launch the app (app is a global variable)
-	Application app("Bresenham", 1024, 768 );
+	Application app("Peinto", 1024, 768 );
 	app.init();
 	app.start();
 	return 0;

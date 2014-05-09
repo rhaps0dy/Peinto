@@ -1,9 +1,7 @@
+#include <math.h>
+#include "platform.h"
 #include "framework.h"
-
-#include "includes.h"
-#include <cassert>
-#include <cmath> //for sqrt (square root) function
-#include <math.h> //atan2
+#include <algorithm>
 
 //Color
 const Color Color::BLACK(0,0,0);

@@ -2,29 +2,13 @@
 	This class encapsulates the application, is in charge of creating the data, getting the user input, process the update and render.
 */
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
-
-#include "includes.h"
-#include "framework.h"
-#include "image.h"
-
-// describes the current state of the GUI
-typedef enum {
-	CIRCLE,
-	CIRCLE_D,
-	LINE,
-	LINE_D,
-	FREEHAND,
-	FREEHAND_D,
-	POLYGON,
-	POLYGON_D,
-} GUITool;
-
-typedef struct {
-	Pos2 lastMDown;
-	GUITool tool;
-} GUIState;
+/*requires
+"platform.h"
+"framework.h"
+"image.h"
+"gui.h"
+"application.h"
+*/
 
 class Application
 {
@@ -78,5 +62,3 @@ public:
 
 	void start();
 };
-
-#endif

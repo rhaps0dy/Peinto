@@ -1,6 +1,7 @@
 /*requires
-"image.h"
+"platform.h"
 "framework.h"
+"image.h"
 */
 
 void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color c);
