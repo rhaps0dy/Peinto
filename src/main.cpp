@@ -11,6 +11,7 @@
 #include "framework.h"
 #include "image.h"
 #include "gui.h"
+#include "draw.h"
 #include "application.h"
 
 int main(int argc, char **argv)

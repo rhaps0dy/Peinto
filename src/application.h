@@ -7,7 +7,7 @@
 "framework.h"
 "image.h"
 "gui.h"
-"application.h"
+"draw.h"
 */
 
 class Application
@@ -23,6 +23,7 @@ public:
 	//We paint in this image
 	Image *canvas;
 	GUIState gs;
+	Polyline *curPolyline;
 
 #ifdef APP_TIME_ENABLED
 	Uint time;

@@ -1,10 +1,10 @@
 // describes the current state of the GUI
 typedef enum {
-	CIRCLE,
 	LINE,
-	FREEHAND,
-	POLYGON,
+	CIRCLE,
+	POLYGONAL,
 	SHAPE,
+	FREEHAND,
 } GUITool;
 
 typedef struct {

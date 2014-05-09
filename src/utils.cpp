@@ -2,6 +2,7 @@
 #include "framework.h"
 #include "utils.h"
 #include "gui.h"
+#include "draw.h"
 #include "image.h"
 #include "application.h"
 #ifdef WIN32

@@ -499,3 +499,11 @@ Vector3 RayPlaneCollision( const Vector3& plane_pos, const Vector3& plane_normal
     Float t = -(numer / denom);
 	return ray_origin + ray_dir * t;
 }
+
+#define ABSDIFF(a, b) (a > b ? a-b : b-a)
+Uint Pos2::distTo(Pos2 *p)
+{
+	Uint dx = ABSDIFF(p->x, x);
+	Uint dy = ABSDIFF(p->y, y);
+	return isqrt(dx*dx + dy*dy);
+}

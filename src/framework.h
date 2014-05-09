@@ -250,4 +250,5 @@ public:
 	Pos2() { x = y = 0; }
 	Pos2(Uint _x, Uint _y) { x=_x; y=_y; }
 	inline void set(Uint _x, Uint _y) { x=_x; y=_y; }
+	Uint distTo(Pos2 *p);
 };

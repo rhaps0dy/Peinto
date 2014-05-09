@@ -2,6 +2,7 @@
 #include "framework.h"
 #include "image.h"
 #include "draw.h"
+#include <malloc.h>
 
 #define PAINTPIXEL(P) img->setPixel(P.x, P.y, c);
 
@@ -82,13 +83,15 @@ void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color c)
 #define PAINTQUADRANT(op1, op2) { \
 		p2.x = p.x op1 x; \
 		p2.y = p.y op2 y; \
+		if(p2.x < limx && p2.y < limy) \
 		PAINTPIXEL(p2); \
 		p2.x = p.x op1 y; \
 		p2.y = p.y op2 x; \
+		if(p2.x < limx && p2.y < limy) \
 		PAINTPIXEL(p2); \
 }
 
-void drawCircle(Image *img, Pos2 p, Uint r, const Color c)
+void drawCircle(Image *img, Pos2 p, Uint r, const Color c, Uint limx, Uint limy)
 {
 	int x, y, e;
 	Pos2 p2;
@@ -107,5 +110,47 @@ void drawCircle(Image *img, Pos2 p, Uint r, const Color c)
 			x--;
 			e += 2*(y-x+1);
 		}
+	}
+}
+
+Polyline *
+newPolyline(Pos2 pos)
+{
+	Polyline *p = (Polyline *) malloc(sizeof(Polyline));
+	p->f = p->l = (LPos2 *) malloc(sizeof(LPos2));
+	p->f->p = pos;
+	p->f->n = NULL;
+	return p;
+}
+
+void
+destroyPolyline(Polyline *p)
+{
+	LPos2 *lp = p->f->n;
+	while(p->f != p->l) {
+		free(p->f);
+		p->f = lp;
+		lp = lp->n;
+	}
+	if(p->l) free(p->l);
+	free(p);
+}
+
+void
+addPosPolyline(Polyline *p, Pos2 pos)
+{
+	p->l->n = (LPos2 *) malloc(sizeof(LPos2));
+	p->l = p->l->n;
+	p->l->n = NULL;
+	p->l->p = pos;
+}
+
+void
+drawPolyline(Polyline *p, Image *img, const Color c)
+{
+	LPos2 *lp = p->f;
+	while(lp != p->l) {
+		drawLine(img, lp->p, lp->n->p, c);
+		lp = lp->n;
 	}
 }
