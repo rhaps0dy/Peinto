@@ -25,6 +25,13 @@ Application::Application(const char* caption, int width, int height)
 	gs.dwg = 0;
 
 	curPolyline = NULL;
+	colorSelector.c = Color::BLACK;
+	colorSelector.margins = 3;
+	colorSelector.h = 50;
+	colorSelector.w = 300;
+	colorSelector.x = 0;
+	colorSelector.y = window_height - colorSelector.h;
+	colorSelector.visible = ~0;
 }
 
 //Here we have already GL working, so we can create meshes and textures
@@ -33,7 +40,7 @@ void Application::init(void)
 	showREADME();
 	img = new Image(window_width, window_height);
 	canvas = new Image(window_width, window_height);
-	canvas->fill(Color::BLACK);
+	canvas->fill(Color::WHITE);
 }
 
 Application::~Application()
@@ -49,24 +56,23 @@ void Application::render(void)
 	// Clear the window and the depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-	img->fill(Color::BLACK);
 	memcpy(img->pixels, canvas->pixels, window_width*window_height*sizeof(Color));
 	if(gs.dwg) {
 		switch(gs.tool) {
 			case FREEHAND:
 			case SHAPE:
 			case POLYGONAL:
-				drawPolyline(curPolyline, img, Color::RED);
+				drawPolyline(curPolyline, img, colorSelector.c);
 			case LINE:
-				drawLine(img, gs.lastMDown, mouse_position, Color::RED);
+				drawLine(img, gs.lastMDown, mouse_position, colorSelector.c);
 				break;
 			case CIRCLE:
 				drawCircle(img, gs.lastMDown, mouse_position.distTo(&gs.lastMDown),
-					Color::RED);
+					colorSelector.c);
 			default: ;
 		}
 	}
+	drawColorSelector(&colorSelector, img);
 	renderImage(img);
 
 	//swap between front buffer and back buffer
@@ -99,7 +105,7 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 			if(gs.tool == SHAPE)
 				addPosPolyline(curPolyline, curPolyline->f->p);
 			if(gs.tool == SHAPE || gs.tool == POLYGONAL)
-				drawPolyline(curPolyline, canvas, Color::WHITE);
+				drawPolyline(curPolyline, canvas, colorSelector.c);
 		/*case SDLK_ESCAPE: break;*/
 	}
 	if(curPolyline) {
@@ -112,8 +118,9 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 //mouse button event
 void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
+	if(handleClick(&colorSelector, mouse_position)) return;
 	if(gs.tool == BUCKET) {
-		fill(canvas, mouse_position, Color::WHITE);
+		fill(canvas, mouse_position, colorSelector.c);
 		return;
 	}
 	if(!gs.dwg) {
@@ -133,12 +140,12 @@ void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 				break;
 			case LINE:
 				gs.dwg = 0;
-				drawLine(canvas, gs.lastMDown, mouse_position, Color::WHITE);
+				drawLine(canvas, gs.lastMDown, mouse_position, colorSelector.c);
 				break;
 			case CIRCLE:
 				gs.dwg = 0;
 				drawCircle(canvas, gs.lastMDown, mouse_position.distTo(&gs.lastMDown),
-					Color::WHITE);
+					colorSelector.c);
 			default: ;
 		}
 	}
@@ -150,7 +157,7 @@ void Application::onMouseButtonUp( SDL_MouseButtonEvent event )
 	if(gs.tool == FREEHAND && gs.dwg)
 	{
 		gs.dwg = 0;
-		drawPolyline(curPolyline, canvas, Color::WHITE);
+		drawPolyline(curPolyline, canvas, colorSelector.c);
 		destroyPolyline(curPolyline);
 		curPolyline = NULL;
 	}

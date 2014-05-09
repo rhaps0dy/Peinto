@@ -24,6 +24,7 @@ public:
 	Image *canvas;
 	GUIState gs;
 	Polyline *curPolyline;
+	ColorSelector colorSelector;
 
 #ifdef APP_TIME_ENABLED
 	Uint time;

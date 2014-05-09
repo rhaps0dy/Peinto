@@ -135,7 +135,6 @@ destroyPolyline(Polyline *p)
 {
 	int total=0;
 	while(popPolyline(p))total++;
-	printf("free'd %d nodes\n", total);
 	free(p->f);
 	free(p);
 }
