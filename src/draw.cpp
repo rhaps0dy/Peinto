@@ -3,6 +3,7 @@
 #include "image.h"
 #include "draw.h"
 #include <malloc.h>
+#include <stdio.h>
 
 #define PAINTPIXEL(P) img->setPixel(P.x, P.y, c);
 
@@ -83,15 +84,15 @@ void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color c)
 #define PAINTQUADRANT(op1, op2) { \
 		p2.x = p.x op1 x; \
 		p2.y = p.y op2 y; \
-		if(p2.x < limx && p2.y < limy) \
+		if(p2.x < img->width && p2.y < img->height) \
 		PAINTPIXEL(p2); \
 		p2.x = p.x op1 y; \
 		p2.y = p.y op2 x; \
-		if(p2.x < limx && p2.y < limy) \
+		if(p2.x < img->width && p2.y < img->height) \
 		PAINTPIXEL(p2); \
 }
 
-void drawCircle(Image *img, Pos2 p, Uint r, const Color c, Uint limx, Uint limy)
+void drawCircle(Image *img, Pos2 p, Uint r, const Color c)
 {
 	int x, y, e;
 	Pos2 p2;
@@ -113,44 +114,104 @@ void drawCircle(Image *img, Pos2 p, Uint r, const Color c, Uint limx, Uint limy)
 	}
 }
 
+LPos2 *
+newLPos2(void)
+{
+	LPos2 *lp = (LPos2 *) malloc(sizeof(LPos2));
+	lp->n = NULL;
+	return lp;
+}
+
 Polyline *
-newPolyline(Pos2 pos)
+newPolyline(void)
 {
 	Polyline *p = (Polyline *) malloc(sizeof(Polyline));
-	p->f = p->l = (LPos2 *) malloc(sizeof(LPos2));
-	p->f->p = pos;
-	p->f->n = NULL;
+	p->f = p->l = newLPos2();
 	return p;
 }
 
 void
 destroyPolyline(Polyline *p)
 {
-	LPos2 *lp = p->f->n;
-	while(p->f != p->l) {
-		free(p->f);
-		p->f = lp;
-		lp = lp->n;
-	}
-	if(p->l) free(p->l);
+	int total=0;
+	while(popPolyline(p))total++;
+	printf("free'd %d nodes\n", total);
+	free(p->f);
 	free(p);
 }
 
 void
 addPosPolyline(Polyline *p, Pos2 pos)
 {
-	p->l->n = (LPos2 *) malloc(sizeof(LPos2));
-	p->l = p->l->n;
-	p->l->n = NULL;
+	p->l->n = newLPos2();
 	p->l->p = pos;
+	p->l = p->l->n;
 }
 
 void
 drawPolyline(Polyline *p, Image *img, const Color c)
 {
 	LPos2 *lp = p->f;
-	while(lp != p->l) {
+	while(lp->n != p->l) {
 		drawLine(img, lp->p, lp->n->p, c);
 		lp = lp->n;
 	}
 }
+
+char
+popPolyline(Polyline *p)
+{
+	LPos2 *lp;
+	lp = p->f;
+	if(!lp->n)
+		return 0;
+	p->f = lp->n;
+	free(lp);
+	return -1;
+}
+
+void
+fill(Image *img, Pos2 pos, const Color c)
+{
+	Color init;
+	Uint x, y;
+	Polyline *p = newPolyline();
+	init = img->getPixel(pos.x, pos.y);
+	addPosPolyline(p, pos);
+	while(1) {
+		x = p->f->p.x;
+		y = p->f->p.y;
+		if(!popPolyline(p)) return;
+		if(img->getPixel(x, y) != init) continue;
+
+		img->setPixel(x, y, c);
+		if(x+1 < img->width) addPosPolyline(p, Pos2(x+1, y));
+		if(x-1 < img->width) addPosPolyline(p, Pos2(x-1, y));
+		if(y+1 < img->height) addPosPolyline(p, Pos2(x, y+1));
+		if(y-1 < img->height) addPosPolyline(p, Pos2(x, y-1));
+	}
+	destroyPolyline(p);
+}
+
+#ifndef RELEASE
+void
+printPolylineLength(Polyline *p)
+{
+	int i=0;
+	LPos2 *lp;
+	for(lp = p->f; lp != p->l; lp = lp->n) i++;
+	printf("Length %d, Head %x, Tail %x\n", i, p->f, p->l);
+}
+
+void
+printPolyline(Polyline *p)
+{
+	LPos2 *lp = p->f;
+	printf("First: %x, Last: %x\n", p->f, p->l);
+	while(lp->n) {
+		printf("[%u %u %x %x] -> ", lp->p.x, lp->p.y, lp, lp->n);
+		lp = lp->n;
+	}
+	printf("[%x]\n\n", lp->n);
+}
+#endif

@@ -5,6 +5,7 @@ typedef enum {
 	POLYGONAL,
 	SHAPE,
 	FREEHAND,
+	BUCKET,
 } GUITool;
 
 typedef struct {

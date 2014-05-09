@@ -63,7 +63,8 @@ void Application::render(void)
 				break;
 			case CIRCLE:
 				drawCircle(img, gs.lastMDown, mouse_position.distTo(&gs.lastMDown),
-					Color::RED, window_width, window_height);
+					Color::RED);
+			default: ;
 		}
 	}
 	renderImage(img);
@@ -87,13 +88,14 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 {
 	switch(event.keysym.sym)
 	{
+		case SDLK_q: exit(0);
+		case SDLK_b: gs.tool = BUCKET; break;
 		case SDLK_f: gs.tool = FREEHAND; break;
 		case SDLK_c: gs.tool = CIRCLE; break;
 		case SDLK_l: gs.tool = LINE; break;
 		case SDLK_p: gs.tool = POLYGONAL; break;
 		case SDLK_s: gs.tool = SHAPE; break;
 		case SDLK_RETURN:
-			if(gs.dwg) gs.dwg = 0;
 			if(gs.tool == SHAPE)
 				addPosPolyline(curPolyline, curPolyline->f->p);
 			if(gs.tool == SHAPE || gs.tool == POLYGONAL)
@@ -103,17 +105,24 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 	if(curPolyline) {
 		destroyPolyline(curPolyline);
 		curPolyline = NULL;
-		gs.dwg = 0;
 	}
+	gs.dwg = 0;
 }
 
 //mouse button event
 void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
+	if(gs.tool == BUCKET) {
+		fill(canvas, mouse_position, Color::WHITE);
+		return;
+	}
 	if(!gs.dwg) {
 		gs.dwg = -1;
 		if(gs.tool == POLYGONAL || (gs.tool == FREEHAND || gs.tool == SHAPE))
-			curPolyline = newPolyline(mouse_position);
+		{
+			curPolyline = newPolyline();
+			addPosPolyline(curPolyline, mouse_position);
+		}
 	}
 	else {
 		switch(gs.tool) {
@@ -129,8 +138,8 @@ void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 			case CIRCLE:
 				gs.dwg = 0;
 				drawCircle(canvas, gs.lastMDown, mouse_position.distTo(&gs.lastMDown),
-					Color::WHITE, window_width, window_height);
-			default: break;
+					Color::WHITE);
+			default: ;
 		}
 	}
 	gs.lastMDown = mouse_position;
