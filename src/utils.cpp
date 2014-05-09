@@ -52,7 +52,7 @@ SDL_Window* createWindow(const char* caption, int width, int height )
 	//create the window
 	SDL_Window *window = SDL_CreateWindow(
 		caption, 100, 100, width, height,
-		SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
+		SDL_WINDOW_OPENGL);
 
 	if(!window)
 	{
@@ -113,12 +113,6 @@ void launchLoop(Application* app)
 					case SDL_KEYDOWN: //EXAMPLE OF sync keyboard input
 						app->onKeyPressed(sdlEvent.key);
 						break;
-					case SDL_WINDOWEVENT:
-						switch (sdlEvent.window.event) {
-							case SDL_WINDOWEVENT_RESIZED: //resize opengl context
-								app->setWindowSize( sdlEvent.window.data1, sdlEvent.window.data2 );
-								break;
-						}
 				}
 		}
 

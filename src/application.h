@@ -9,6 +9,23 @@
 #include "framework.h"
 #include "image.h"
 
+// describes the current state of the GUI
+typedef enum {
+	CIRCLE,
+	CIRCLE_D,
+	LINE,
+	LINE_D,
+	FREEHAND,
+	FREEHAND_D,
+	POLYGON,
+	POLYGON_D,
+} GUITool;
+
+typedef struct {
+	Pos2 lastMDown;
+	GUITool tool;
+} GUIState;
+
 class Application
 {
 public:
@@ -19,12 +36,9 @@ public:
 
 	//world renderer image
 	Image *img;
-	Pos2 p1;
-	Pos2 p2;
-	Color c;
-
-	Uint p2Timer;
-	char whichDirection;
+	//We paint in this image
+	Image *canvas;
+	GUIState gs;
 
 #ifdef APP_TIME_ENABLED
 	Uint time;
@@ -55,7 +69,6 @@ public:
 	void onMouseButtonUp( SDL_MouseButtonEvent event );
 
 	//other methods to control the app
-	void setWindowSize(int width, int height);
 	Vector2 getWindowSize()
 	{
 		int w,h;

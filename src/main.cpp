@@ -13,7 +13,7 @@
 int main(int argc, char **argv)
 {
 	//launch the app (app is a global variable)
-	Application app("Bresenham", 800, 600 );
+	Application app("Bresenham", 1024, 768 );
 	app.init();
 	app.start();
 	return 0;

@@ -22,6 +22,30 @@ Color Color::getComplementary()
 	return Color(~r, ~g, ~b);
 }
 
+Uint isqrt(Uint root)
+{
+	Uint squaredbit, remainder;
+	// Integer square root
+	if(root>1)
+	{
+		squaredbit = ((~((Uint)0)) >> 1) & ~((~((Uint)0)) >> 2);
+		remainder = root;
+		root = 0;
+		while (squaredbit > 0) {
+			if (remainder >= (squaredbit | root)) {
+				remainder -= (squaredbit | root);
+				root >>= 1;
+				root |= squaredbit;
+			} else {
+				root >>= 1;
+			}
+			squaredbit >>= 2; 
+		}
+	}
+	return root;
+}
+
+
 void Color::operator = (const Vector3& v)
 {
 	r = clamp<unsigned char>( (unsigned char)v.x,0,255);

@@ -31,29 +31,7 @@ typedef unsigned int Uint;
 template<typename T>
 inline T clamp(T x, T a, T b) { return x < a ? a : (x > b ? b : x); }
 
-inline static Uint isqrt(Uint root)
-{
-	Uint squaredbit, remainder;
-	// Integer square root
-	if(root>1)
-	{
-		squaredbit = ((~((Uint)0)) >> 1) & ~((~((Uint)0)) >> 2);
-		remainder = root;
-		root = 0;
-		while (squaredbit > 0) {
-			if (remainder >= (squaredbit | root)) {
-				remainder -= (squaredbit | root);
-				root >>= 1;
-				root |= squaredbit;
-			} else {
-				root >>= 1;
-			}
-			squaredbit >>= 2; 
-		}
-	}
-	return root;
-}
-
+Uint isqrt(Uint root);
 
 class Vector3;
 

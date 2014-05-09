@@ -2,7 +2,7 @@
 #include "framework.h"
 #include "bresenham.h"
 
-#define PAINTPIXEL(P) img->setPixel(P.x, P.y, *c);
+#define PAINTPIXEL(P) img->setPixel(P.x, P.y, c);
 
 #define STRAIGHTFOR(comp, dir, coord) {\
 	for(; p1.coord comp p2.coord ; p1.coord dir##dir) \
@@ -37,7 +37,7 @@
 #define BRESENHAMX(dir) BRESENHAM(x, y, <, +, dir)
 #define BRESENHAMY(comp, dir) BRESENHAM(y, x, comp, dir, +)
 
-void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color *c)
+void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color c)
 {
 	int dx, dy, e=0;
 
@@ -87,7 +87,7 @@ void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color *c)
 		PAINTPIXEL(p2); \
 }
 
-void drawCircle(Image *img, Pos2 p, Uint r, const Color *c)
+void drawCircle(Image *img, Pos2 p, Uint r, const Color c)
 {
 	int x, y, e;
 	Pos2 p2;
