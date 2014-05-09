@@ -143,6 +143,7 @@ void Application::onMouseButtonUp( SDL_MouseButtonEvent event )
 		gs.dwg = 0;
 		drawPolyline(curPolyline, canvas, Color::WHITE);
 		destroyPolyline(curPolyline);
+		curPolyline = NULL;
 	}
 }
 
