@@ -19,8 +19,8 @@ Application::Application(const char* caption, int width, int height)
 	this->keystate = SDL_GetKeyboardState(NULL);
 
 	c.set(255.,255.,255.);
-	p1.set(100, 100);
-	p2.set(100, 100);
+	p1.set(400, 400);
+	p2.set(400, 400);
 	whichDirection = 0;
 }
 
@@ -43,8 +43,9 @@ void Application::render(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-	img->fill(Color::BLACK);
+	img->fill(Color::BLUE);
 	drawLine(img, p1, p2, &c);
+	drawCircle(img, p2, p2Timer/100, &Color::RED);
 	renderImage(img);
 
 	//swap between front buffer and back buffer
@@ -61,16 +62,16 @@ void Application::update(Uint dt)
 	}
 	switch(whichDirection) {
 		case 0:
-			p2.set(200, p2Timer/50);
+			p2.set(500, 300+p2Timer/50);
 			break;
 		case 1:
-			p2.set(200-p2Timer/50, 200);
+			p2.set(500-p2Timer/50, 500);
 			break;
 		case 2:
-			p2.set(0, 200-p2Timer/50);
+			p2.set(300, 500-p2Timer/50);
 			break;
 		case 3:
-			p2.set(p2Timer/50, 0);
+			p2.set(300+p2Timer/50, 300);
 			break;
 	}
 }
@@ -104,4 +105,5 @@ void Application::setWindowSize(int width, int height)
 	glViewport( 0,0, width, height );
 	window_width = width;
 	window_height = height;
+	img->resizeNoCopy(width, height);
 }
