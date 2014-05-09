@@ -25,6 +25,7 @@ public:
 	GUIState gs;
 	Polyline *curPolyline;
 	ColorSelector colorSelector;
+	char checkColor;
 
 #ifdef APP_TIME_ENABLED
 	Uint time;

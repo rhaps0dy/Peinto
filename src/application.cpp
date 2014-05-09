@@ -32,6 +32,8 @@ Application::Application(const char* caption, int width, int height)
 	colorSelector.x = 0;
 	colorSelector.y = window_height - colorSelector.h;
 	colorSelector.visible = ~0;
+	
+	checkColor = 0;
 }
 
 //Here we have already GL working, so we can create meshes and textures
@@ -87,6 +89,7 @@ void Application::update(Uint dt)
 		addPosPolyline(curPolyline, mouse_position);
 		gs.lastMDown = mouse_position;
 	}
+	if(checkColor) handleClick(&colorSelector, mouse_position);
 }
 
 //keyboard press event
@@ -118,7 +121,7 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 //mouse button event
 void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 {
-	if(handleClick(&colorSelector, mouse_position)) return;
+	if(checkColor = handleClick(&colorSelector, mouse_position)) return;
 	if(gs.tool == BUCKET) {
 		fill(canvas, mouse_position, colorSelector.c);
 		return;
@@ -161,6 +164,7 @@ void Application::onMouseButtonUp( SDL_MouseButtonEvent event )
 		destroyPolyline(curPolyline);
 		curPolyline = NULL;
 	}
+	checkColor = 0;
 }
 
 //when the app starts
