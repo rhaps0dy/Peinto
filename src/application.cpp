@@ -45,10 +45,14 @@ void Application::render(void)
 	drawLine(img, Pos2(200, 300), Pos2(100, 200), &Color::RED);
 	drawLine(img, Pos2(0, 400), Pos2(100, 300), &Color::RED);
 	drawLine(img, Pos2(200, 300), Pos2(100, 400), &Color::RED);
-	drawLine(img, Pos2(300, 100), Pos2(400, 150), &Color::RED);
-	drawLine(img, Pos2(400, 150), Pos2(500, 100), &Color::RED);
-	drawLine(img, Pos2(500, 100), Pos2(400, 50), &Color::RED);
-	drawLine(img, Pos2(400, 50), Pos2(300, 100), &Color::RED);
+	drawLine(img, Pos2(300, 100), Pos2(400, 150), &Color::GREEN);
+	drawLine(img, Pos2(400, 150), Pos2(500, 100), &Color::GREEN);
+	drawLine(img, Pos2(500, 100), Pos2(400, 50), &Color::GREEN);
+	drawLine(img, Pos2(400, 50), Pos2(300, 100), &Color::GREEN);
+	drawLine(img, Pos2(400, 200), Pos2(350, 300), &Color::WHITE);
+	drawLine(img, Pos2(350, 300), Pos2(400, 400), &Color::WHITE);
+	drawLine(img, Pos2(400, 400), Pos2(450, 300), &Color::WHITE);
+	drawLine(img, Pos2(450, 300), Pos2(400, 200), &Color::WHITE);
 
 	renderImage(img);
 

@@ -28,18 +28,21 @@
 			e += d##coordB ; \
 		else \
 		{ \
-			p1.y dirB##dirB ; \
+			p1.coordB dirB##dirB ; \
 			e += d##coordB - d##coordA ; \
 		} \
 	} \
 }
 
-#define BRESENHAMX(dir) BRESENHAM(x, y, >, +, dir)
+#define BRESENHAMX(dir) BRESENHAM(x, y, <, +, dir)
 #define BRESENHAMY(comp, dir) BRESENHAM(y, x, comp, dir, +)
 
 void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color *c)
 {
 	Uint dx, dy, e=0;
+
+	img->setPixel(p1.x, p1.y, Color::GREEN);
+	img->setPixel(p2.x, p2.y, Color::BLUE);
 
 	if(p1.y==p2.y)
 	{
@@ -67,14 +70,14 @@ void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color *c)
 		dy = p1.y - p2.y;
 		if(dx==dy)        DIAGONALFOR(-)
 		else if(dx>dy)    BRESENHAMX(-)
-		else              BRESENHAMY(<, -)
+		else              BRESENHAMY(>, -)
 	}
 	else
 	{
 		dy = p2.y - p1.y;
 		if(dx==dy)        DIAGONALFOR(+)
 		else if(dx>dy)    BRESENHAMX(+)
-		else              BRESENHAMY(>, +)
+		else              BRESENHAMY(<, +)
 	}
 }
 void drawCircle(Image *img, Pos2 p, Uint r, const Color *c)
