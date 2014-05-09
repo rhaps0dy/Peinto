@@ -19,6 +19,12 @@ public:
 
 	//world renderer image
 	Image *img;
+	Pos2 p1;
+	Pos2 p2;
+	Color c;
+
+	Uint p2Timer;
+	char whichDirection;
 
 #ifdef APP_TIME_ENABLED
 	Uint time;

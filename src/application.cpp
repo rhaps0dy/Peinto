@@ -17,6 +17,11 @@ Application::Application(const char* caption, int width, int height)
 	this->window_width = w;
 	this->window_height = h;
 	this->keystate = SDL_GetKeyboardState(NULL);
+
+	c.set(255.,255.,255.);
+	p1.set(100, 100);
+	p2.set(100, 100);
+	whichDirection = 0;
 }
 
 //Here we have already GL working, so we can create meshes and textures
@@ -37,23 +42,9 @@ void Application::render(void)
 	// Clear the window and the depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	drawLine(img, Pos2(50, 0), Pos2(50, 100), &Color::RED);
-	drawLine(img, Pos2(200, 50), Pos2(100, 50), &Color::RED);
-	drawLine(img, Pos2(0, 150), Pos2(100, 150), &Color::RED);
-	drawLine(img, Pos2(150, 200), Pos2(150, 100), &Color::RED);
-	drawLine(img, Pos2(0, 200), Pos2(100, 300), &Color::RED);
-	drawLine(img, Pos2(200, 300), Pos2(100, 200), &Color::RED);
-	drawLine(img, Pos2(0, 400), Pos2(100, 300), &Color::RED);
-	drawLine(img, Pos2(200, 300), Pos2(100, 400), &Color::RED);
-	drawLine(img, Pos2(300, 100), Pos2(400, 150), &Color::GREEN);
-	drawLine(img, Pos2(400, 150), Pos2(500, 100), &Color::GREEN);
-	drawLine(img, Pos2(500, 100), Pos2(400, 50), &Color::GREEN);
-	drawLine(img, Pos2(400, 50), Pos2(300, 100), &Color::GREEN);
-	drawLine(img, Pos2(400, 200), Pos2(350, 300), &Color::WHITE);
-	drawLine(img, Pos2(350, 300), Pos2(400, 400), &Color::WHITE);
-	drawLine(img, Pos2(400, 400), Pos2(450, 300), &Color::WHITE);
-	drawLine(img, Pos2(450, 300), Pos2(400, 200), &Color::WHITE);
 
+	img->fill(Color::BLACK);
+	drawLine(img, p1, p2, &c);
 	renderImage(img);
 
 	//swap between front buffer and back buffer
@@ -63,6 +54,25 @@ void Application::render(void)
 //called after render
 void Application::update(Uint dt)
 {
+	p2Timer += dt;
+	while(p2Timer > 10000) {
+		p2Timer -= 10000;
+		whichDirection = (whichDirection+1)%4;
+	}
+	switch(whichDirection) {
+		case 0:
+			p2.set(200, p2Timer/50);
+			break;
+		case 1:
+			p2.set(200-p2Timer/50, 200);
+			break;
+		case 2:
+			p2.set(0, 200-p2Timer/50);
+			break;
+		case 3:
+			p2.set(p2Timer/50, 0);
+			break;
+	}
 }
 
 //keyboard press event

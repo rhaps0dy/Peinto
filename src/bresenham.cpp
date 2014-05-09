@@ -2,11 +2,12 @@
 #include "framework.h"
 #include "bresenham.h"
 
-#define PAINTPIXEL img->setPixel(p1.x, p1.y, *c);
+#define PAINTPIXEL(N) img->setPixel(p##N.x, p##N.y, *c);
 
 #define STRAIGHTFOR(comp, dir, coord) {\
-	for(; p1.coord comp##= p2.coord ; p1.coord dir##dir) \
-		PAINTPIXEL \
+	for(; p1.coord comp p2.coord ; p1.coord dir##dir) \
+		PAINTPIXEL(1) \
+	PAINTPIXEL(2) \
 }
 
 #define INTERCHANGE(A, B) { \
@@ -16,22 +17,21 @@
 }
 
 #define DIAGONALFOR(dir) {\
-	for(; p1.x<=p2.x; p1.x++, p1.y dir##dir) \
-		PAINTPIXEL \
+	for(; p1.x<p2.x; p1.x++, p1.y dir##dir) \
+		PAINTPIXEL(1) \
+	PAINTPIXEL(2) \
 }
 
 #define BRESENHAM(coordA, coordB, comp, dirA, dirB) {\
-	for(; p1.coordA comp##= p2.coordA; p1.coordA dirA##dirA) \
-	{ \
-		PAINTPIXEL \
-		if(((e+ d##coordB )<<1) < d##coordA ) \
-			e += d##coordB ; \
-		else \
-		{ \
+	for(; p1.coordA comp p2.coordA; p1.coordA dirA##dirA) { \
+		PAINTPIXEL(1) \
+		e += d##coordB ; \
+		if(e > d##coordA) { \
+			e -= d##coordA ; \
 			p1.coordB dirB##dirB ; \
-			e += d##coordB - d##coordA ; \
 		} \
 	} \
+	PAINTPIXEL(2) \
 }
 
 #define BRESENHAMX(dir) BRESENHAM(x, y, <, +, dir)
@@ -40,9 +40,6 @@
 void drawLine(Image *img, Pos2 p1, Pos2 p2, const Color *c)
 {
 	Uint dx, dy, e=0;
-
-	img->setPixel(p1.x, p1.y, Color::GREEN);
-	img->setPixel(p2.x, p2.y, Color::BLUE);
 
 	if(p1.y==p2.y)
 	{
