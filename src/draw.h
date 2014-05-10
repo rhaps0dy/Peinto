@@ -35,6 +35,6 @@ void LLPos2Draw(LLPos2 *p, Image *img, const Color c);
 char popLLPos2(LLPos2 *p);
 
 #ifndef RELEASE
-void printLLPos2Length(LLPos2 *p);
-void printLLPos2(LLPos2 *p);
+void LLPos2PrintLength(LLPos2 *p);
+void LLPos2Print(LLPos2 *p);
 #endif

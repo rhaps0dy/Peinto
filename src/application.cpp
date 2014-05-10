@@ -99,6 +99,7 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 	switch(event.keysym.sym)
 	{
 		case SDLK_q: exit(0);
+		case SDLK_v: colorSelector.visible = !colorSelector.visible; break;
 		case SDLK_b: gs.tool = BUCKET; break;
 		case SDLK_f: gs.tool = FREEHAND; break;
 		case SDLK_c: gs.tool = CIRCLE; break;

@@ -5,6 +5,7 @@
 #include "draw.h"
 #include <malloc.h>
 #include <stdio.h>
+#include <stdint.h>
 
 #define PAINTPIXEL(P) img->setPixel(P.x, P.y, c);
 
@@ -170,32 +171,67 @@ popLLPos2(LLPos2 *p)
 	return -1;
 }
 
+#define ADDTOQUEUEX(oper) { \
+	arrpos = y*w + (x oper 1)/8; \
+	mask = 0x01<<((x oper 1)%8); \
+	if((x oper 1) < img->width && !(visited[arrpos] & mask)) { \
+		visited[arrpos] |= mask; \
+		LLPos2Add(p, Pos2(x oper 1, y)); \
+	} \
+}
+
+#define ADDTOQUEUEY(oper) { \
+	arrpos = (y oper 1)*w + x/8; \
+	mask = 0x01<<(x%8); \
+	if((y oper 1) < img->height && !(visited[arrpos] & mask)) { \
+		visited[arrpos] |= mask; \
+		LLPos2Add(p, Pos2(x, y oper 1)); \
+	} \
+}
+
 void
 fill(Image *img, Pos2 pos, const Color c)
 {
+	/* the color of the area we have to change the color of */
 	Color init;
-	Uint x, y;
-	LLPos2 *p = LLPos2New();
+	/* these are for holding precalculated values */
+	Uint x, y, w, arrpos;
+	uint8_t mask;
+	/* we store what we have already added to the queue in visited */
+	uint8_t *visited;
+
 	init = img->getPixel(pos.x, pos.y);
+	if(init == c) return;
+
+	w = (img->width+7)/8;
+	visited = (uint8_t *) malloc(img->height*w*sizeof(uint8_t));
+	for(y=0; y<img->height; y++)
+		for(x=0; x<w-1; x++)
+			visited[y*w+x] = 0;
+	for(y=0; y<img->height; y++)
+		visited[y*w + w-1] = 0xff>>((img->width+7)%8+1);
+
+	LLPos2 *p = LLPos2New();
 	LLPos2Add(p, pos);
+	visited[pos.y*w+pos.x/8] |= 0x01<<(pos.x%8);
 	while(1) {
 		x = p->f->p.x;
 		y = p->f->p.y;
 		if(!popLLPos2(p)) return;
 		if(img->getPixel(x, y) != init) continue;
-
 		img->setPixel(x, y, c);
-		if(x+1 < img->width) LLPos2Add(p, Pos2(x+1, y));
-		if(x-1 < img->width) LLPos2Add(p, Pos2(x-1, y));
-		if(y+1 < img->height) LLPos2Add(p, Pos2(x, y+1));
-		if(y-1 < img->height) LLPos2Add(p, Pos2(x, y-1));
+		ADDTOQUEUEX(+);
+		ADDTOQUEUEX(-);
+		ADDTOQUEUEY(+);
+		ADDTOQUEUEY(-);
 	}
 	LLPos2Destroy(p);
+	free(visited);
 }
 
 #ifndef RELEASE
 void
-printLLPos2Length(LLPos2 *p)
+LLPos2PrintLength(LLPos2 *p)
 {
 	int i=0;
 	LPos2 *lp;
@@ -204,7 +240,7 @@ printLLPos2Length(LLPos2 *p)
 }
 
 void
-printLLPos2(LLPos2 *p)
+LLPos2Print(LLPos2 *p)
 {
 	LPos2 *lp = p->f;
 	printf("First: %x, Last: %x\n", p->f, p->l);
