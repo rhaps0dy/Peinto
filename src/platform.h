@@ -9,6 +9,9 @@
 #endif
 
 //SDL
+/* MSVC needs you to pragma libraries */
+#pragma comment(lib, "SDL2.lib")
+#pragma comment(lib, "SDL2main.lib")
 #ifdef WIN32
 	#include <SDL2/SDL.h>
 	#include <SDL2/SDL_opengl.h>

@@ -23,7 +23,7 @@ public:
 	//We paint in this image
 	Image *canvas;
 	GUIState gs;
-	Polyline *curPolyline;
+	LLPos2 *curLLPos2;
 	ColorSelector colorSelector;
 	char checkColor;
 

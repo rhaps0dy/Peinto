@@ -1,4 +1,5 @@
 #include "platform.h"
+#include <math.h>
 #include "framework.h"
 #include "image.h"
 #include "draw.h"
@@ -115,40 +116,40 @@ void drawCircle(Image *img, Pos2 p, Uint r, const Color c)
 }
 
 LPos2 *
-newLPos2(void)
+LPos2New(void)
 {
 	LPos2 *lp = (LPos2 *) malloc(sizeof(LPos2));
 	lp->n = NULL;
 	return lp;
 }
 
-Polyline *
-newPolyline(void)
+LLPos2 *
+LLPos2New(void)
 {
-	Polyline *p = (Polyline *) malloc(sizeof(Polyline));
-	p->f = p->l = newLPos2();
+	LLPos2 *p = (LLPos2 *) malloc(sizeof(LLPos2));
+	p->f = p->l = LPos2New();
 	return p;
 }
 
 void
-destroyPolyline(Polyline *p)
+LLPos2Destroy(LLPos2 *p)
 {
 	int total=0;
-	while(popPolyline(p))total++;
+	while(popLLPos2(p))total++;
 	free(p->f);
 	free(p);
 }
 
 void
-addPosPolyline(Polyline *p, Pos2 pos)
+LLPos2Add(LLPos2 *p, Pos2 pos)
 {
-	p->l->n = newLPos2();
+	p->l->n = LPos2New();
 	p->l->p = pos;
 	p->l = p->l->n;
 }
 
 void
-drawPolyline(Polyline *p, Image *img, const Color c)
+LLPos2Draw(LLPos2 *p, Image *img, const Color c)
 {
 	LPos2 *lp = p->f;
 	while(lp->n != p->l) {
@@ -158,7 +159,7 @@ drawPolyline(Polyline *p, Image *img, const Color c)
 }
 
 char
-popPolyline(Polyline *p)
+popLLPos2(LLPos2 *p)
 {
 	LPos2 *lp;
 	lp = p->f;
@@ -174,27 +175,27 @@ fill(Image *img, Pos2 pos, const Color c)
 {
 	Color init;
 	Uint x, y;
-	Polyline *p = newPolyline();
+	LLPos2 *p = LLPos2New();
 	init = img->getPixel(pos.x, pos.y);
-	addPosPolyline(p, pos);
+	LLPos2Add(p, pos);
 	while(1) {
 		x = p->f->p.x;
 		y = p->f->p.y;
-		if(!popPolyline(p)) return;
+		if(!popLLPos2(p)) return;
 		if(img->getPixel(x, y) != init) continue;
 
 		img->setPixel(x, y, c);
-		if(x+1 < img->width) addPosPolyline(p, Pos2(x+1, y));
-		if(x-1 < img->width) addPosPolyline(p, Pos2(x-1, y));
-		if(y+1 < img->height) addPosPolyline(p, Pos2(x, y+1));
-		if(y-1 < img->height) addPosPolyline(p, Pos2(x, y-1));
+		if(x+1 < img->width) LLPos2Add(p, Pos2(x+1, y));
+		if(x-1 < img->width) LLPos2Add(p, Pos2(x-1, y));
+		if(y+1 < img->height) LLPos2Add(p, Pos2(x, y+1));
+		if(y-1 < img->height) LLPos2Add(p, Pos2(x, y-1));
 	}
-	destroyPolyline(p);
+	LLPos2Destroy(p);
 }
 
 #ifndef RELEASE
 void
-printPolylineLength(Polyline *p)
+printLLPos2Length(LLPos2 *p)
 {
 	int i=0;
 	LPos2 *lp;
@@ -203,7 +204,7 @@ printPolylineLength(Polyline *p)
 }
 
 void
-printPolyline(Polyline *p)
+printLLPos2(LLPos2 *p)
 {
 	LPos2 *lp = p->f;
 	printf("First: %x, Last: %x\n", p->f, p->l);

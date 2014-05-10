@@ -13,28 +13,28 @@ typedef struct _LPos2 LPos2;
 struct _LPos2 {
 	Pos2 p;
 	/* next */
-	_LPos2 *n;
+	LPos2 *n;
 };
 
-/* polyline which is a linked list with phantom node */
-typedef struct _Polyline Polyline;
-struct _Polyline {
+/* Linked list (with a ghost node) of Pos2 */
+typedef struct _LLPos2 LLPos2;
+struct _LLPos2 {
 	/* first */
 	LPos2 *f;
 	/* last */
 	LPos2 *l;
 };
 
-LPos2 *newLPos2(void);
-Polyline *newPolyline(void);
-void destroyPolyline(Polyline *p);
-void addPosPolyline(Polyline *p, Pos2 pos);
-void drawPolyline(Polyline *p, Image *img, const Color c);
+LPos2 *LPos2New(void);
+LLPos2 *LLPos2New(void);
+void LLPos2Destroy(LLPos2 *p);
+void LLPos2Add(LLPos2 *p, Pos2 pos);
+void LLPos2Draw(LLPos2 *p, Image *img, const Color c);
 
 /* returns -1 if it popped something, 0 if it didn't */
-char popPolyline(Polyline *p);
+char popLLPos2(LLPos2 *p);
 
 #ifndef RELEASE
-void printPolylineLength(Polyline *p);
-void printPolyline(Polyline *p);
+void printLLPos2Length(LLPos2 *p);
+void printLLPos2(LLPos2 *p);
 #endif

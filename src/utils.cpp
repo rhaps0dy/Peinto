@@ -1,4 +1,5 @@
 #include "platform.h"
+#include <math.h>
 #include "framework.h"
 #include "utils.h"
 #include "gui.h"

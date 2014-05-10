@@ -1,4 +1,5 @@
 #include "platform.h"
+#include <math.h>
 #include "framework.h"
 #include "image.h"
 #include "gui.h"
@@ -24,7 +25,7 @@ Application::Application(const char* caption, int width, int height)
 	gs.tool = FREEHAND;
 	gs.dwg = 0;
 
-	curPolyline = NULL;
+	curLLPos2 = NULL;
 	colorSelector.c = Color::BLACK;
 	colorSelector.margins = 3;
 	colorSelector.h = 50;
@@ -47,7 +48,7 @@ void Application::init(void)
 
 Application::~Application()
 {
-	if(curPolyline) destroyPolyline(curPolyline);
+	if(curLLPos2) LLPos2Destroy(curLLPos2);
 	delete img;
 	delete canvas;
 }
@@ -64,7 +65,7 @@ void Application::render(void)
 			case FREEHAND:
 			case SHAPE:
 			case POLYGONAL:
-				drawPolyline(curPolyline, img, colorSelector.c);
+				LLPos2Draw(curLLPos2, img, colorSelector.c);
 			case LINE:
 				drawLine(img, gs.lastMDown, mouse_position, colorSelector.c);
 				break;
@@ -86,7 +87,7 @@ void Application::update(Uint dt)
 {
 	if(gs.dwg && gs.tool == FREEHAND)
 	{
-		addPosPolyline(curPolyline, mouse_position);
+		LLPos2Add(curLLPos2, mouse_position);
 		gs.lastMDown = mouse_position;
 	}
 	if(checkColor) handleClick(&colorSelector, mouse_position);
@@ -106,14 +107,14 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 		case SDLK_s: gs.tool = SHAPE; break;
 		case SDLK_RETURN:
 			if(gs.tool == SHAPE)
-				addPosPolyline(curPolyline, curPolyline->f->p);
+				LLPos2Add(curLLPos2, curLLPos2->f->p);
 			if(gs.tool == SHAPE || gs.tool == POLYGONAL)
-				drawPolyline(curPolyline, canvas, colorSelector.c);
+				LLPos2Draw(curLLPos2, canvas, colorSelector.c);
 		/*case SDLK_ESCAPE: break;*/
 	}
-	if(curPolyline) {
-		destroyPolyline(curPolyline);
-		curPolyline = NULL;
+	if(curLLPos2) {
+		LLPos2Destroy(curLLPos2);
+		curLLPos2 = NULL;
 	}
 	gs.dwg = 0;
 }
@@ -130,8 +131,8 @@ void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 		gs.dwg = -1;
 		if(gs.tool == POLYGONAL || (gs.tool == FREEHAND || gs.tool == SHAPE))
 		{
-			curPolyline = newPolyline();
-			addPosPolyline(curPolyline, mouse_position);
+			curLLPos2 = LLPos2New();
+			LLPos2Add(curLLPos2, mouse_position);
 		}
 	}
 	else {
@@ -139,7 +140,7 @@ void Application::onMouseButtonDown( SDL_MouseButtonEvent event )
 			case POLYGONAL:
 			case SHAPE:
 			case FREEHAND:
-				addPosPolyline(curPolyline, mouse_position);
+				LLPos2Add(curLLPos2, mouse_position);
 				break;
 			case LINE:
 				gs.dwg = 0;
@@ -160,9 +161,9 @@ void Application::onMouseButtonUp( SDL_MouseButtonEvent event )
 	if(gs.tool == FREEHAND && gs.dwg)
 	{
 		gs.dwg = 0;
-		drawPolyline(curPolyline, canvas, colorSelector.c);
-		destroyPolyline(curPolyline);
-		curPolyline = NULL;
+		LLPos2Draw(curLLPos2, canvas, colorSelector.c);
+		LLPos2Destroy(curLLPos2);
+		curLLPos2 = NULL;
 	}
 	checkColor = 0;
 }
