@@ -12,14 +12,14 @@ showREADME(void)
 	puts(
 		"Instrucciones\n"
 		"-------------\n"
-		"L(ine)      - Dibuja una lÌnea\n"
-		"C(ircle)    - Dibuja un cÌrculo\n"
-		"P(olygonal) - Dibuja varias lÌneas seguidas\n"
-		"S(hape)     - Dibuja una forma (polÌgono)\n"
+		"L(ine)      - Dibuja una l√≠nea\n"
+		"C(ircle)    - Dibuja un c√≠rculo\n"
+		"P(olygonal) - Dibuja varias l√≠neas seguidas\n"
+		"S(hape)     - Dibuja una forma (pol√≠gono)\n"
 		"F(reehand)  - Dibuja a mano alzada\n"
-		"B(ucket)    - Bucket fill the clicked region\n"
-		"ESC         - Cancela la acciÛn actual\n"
-		"RETURN      - Termina la lÌnea poligonal o cierra la forma\n"
+		"B(ucket)    - Rellena la regi√≥n clicada\n"
+		"ESC         - Cancela la acci√≥n actual\n"
+		"RETURN      - Termina la l√≠nea poligonal o cierra la forma\n"
 		"Q(uit)      - Sal del programa\n"
 		);
 }

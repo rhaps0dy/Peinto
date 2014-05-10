@@ -85,7 +85,7 @@ void Application::render(void)
 //called after render
 void Application::update(Uint dt)
 {
-	if(gs.dwg && gs.tool == FREEHAND)
+	if(gs.dwg && gs.tool == FREEHAND && mouse_position.distTo(&gs.lastMDown) > 0)
 	{
 		LLPos2Add(curLLPos2, mouse_position);
 		gs.lastMDown = mouse_position;
