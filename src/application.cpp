@@ -106,6 +106,7 @@ void Application::onKeyPressed( SDL_KeyboardEvent event )
 		case SDLK_l: gs.tool = LINE; break;
 		case SDLK_p: gs.tool = POLYGONAL; break;
 		case SDLK_s: gs.tool = SHAPE; break;
+		case SDLK_r: canvas->fill(Color::WHITE); break;
 		case SDLK_RETURN:
 			if(gs.tool == SHAPE)
 				LLPos2Add(curLLPos2, curLLPos2->f->p);

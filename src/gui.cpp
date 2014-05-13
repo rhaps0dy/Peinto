@@ -18,6 +18,7 @@ showREADME(void)
 		"S(hape)     - Dibuja una forma (polígono)\n"
 		"F(reehand)  - Dibuja a mano alzada\n"
 		"B(ucket)    - Rellena la región clicada\n"
+		"R(eset)     - Pinta todo de blanco, reiniciando el dibujo\n"
 		"ESC         - Cancela la acción actual\n"
 		"RETURN      - Termina la línea poligonal o cierra la forma\n"
 		"Q(uit)      - Sal del programa\n"
